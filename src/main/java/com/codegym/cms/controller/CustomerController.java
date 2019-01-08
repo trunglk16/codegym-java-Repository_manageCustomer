@@ -7,6 +7,8 @@ import com.codegym.cms.service.CustomerService;
 import com.codegym.cms.service.ProvinceService;
 import com.codegym.cms.service.impl.CustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -81,6 +83,14 @@ public class CustomerController {
         }else {
             return "redirect:/error.404";
         }
+    }
+
+    @GetMapping("/")
+    public ModelAndView listCustomers(Pageable pageable) {
+        Page<Customer> customers = customerService.findAll(pageable);
+        ModelAndView modelAndView = new ModelAndView("/customer/list");
+        modelAndView.addObject("customers", customers);
+        return modelAndView;
     }
 
 //    @PostMapping("/delete-customer")
