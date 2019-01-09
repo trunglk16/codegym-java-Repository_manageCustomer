@@ -8,8 +8,18 @@
 <th:block th:if="${message}">
     <p th:text="${message}"></p>
 </th:block>
+
+<p><a href="/">Back to index</a></p>
 <p><a href="/create-customer">Create new customer</a></p>
 <p><a href="/create-province">Create new province</a></p>
+
+<form method="get" action="/customers">
+    Search by first name:
+    <input name="s" type="text"/>
+    <input type="submit" value="Search"/>
+</form><br/>
+<table border="1">
+
 <h1>Customers</h1>
 <table border="1">
     <tr>

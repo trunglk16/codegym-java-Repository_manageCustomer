@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.GeneratedValue;
 import java.util.List;
+import java.util.Optional;
+
 
 @Controller
 public class CustomerController {
@@ -30,13 +32,13 @@ public class CustomerController {
         return provinceService.findAll();
     }
 
-    @GetMapping("/customers")
-    public ModelAndView listCustomers(){
-        Iterable<Customer> customers = customerService.findAll();
-        ModelAndView modelAndView = new ModelAndView("/customer/list");
-        modelAndView.addObject("customers", customers);
-        return modelAndView;
-    }
+//    @GetMapping("/customers")
+//    public ModelAndView listCustomers(){
+//        Iterable<Customer> customers = customerService.findAll();
+//        ModelAndView modelAndView = new ModelAndView("/customer/list");
+//        modelAndView.addObject("customers", customers);
+//        return modelAndView;
+//    }
 
     @GetMapping("/create-customer")
     public ModelAndView showCreateForm(){
@@ -71,6 +73,15 @@ public class CustomerController {
         }
     }
 
+    @PostMapping("/edit-customer")
+    public ModelAndView updateCustomer(@ModelAttribute("customer") Customer customer){
+        customerService.save(customer);
+        ModelAndView modelAndView = new ModelAndView("/customer/edit");
+        modelAndView.addObject("customer", customer);
+        modelAndView.addObject("message", "Customer updated successfully");
+        return modelAndView;
+    }
+
 
 
     @GetMapping("/delete-customer/{id}")
@@ -85,9 +96,27 @@ public class CustomerController {
         }
     }
 
+
     @GetMapping("/")
-    public ModelAndView listCustomers(Pageable pageable) {
-        Page<Customer> customers = customerService.findAll(pageable);
+    public String index(){
+        return "/index";
+    }
+//    @GetMapping("/")
+//    public ModelAndView listCustomers(Pageable pageable) {
+//        Page<Customer> customers = customerService.findAll(pageable);
+//        ModelAndView modelAndView = new ModelAndView("/customer/list");
+//        modelAndView.addObject("customers", customers);
+//        return modelAndView;
+//    }
+
+    @GetMapping("/customers")
+    public ModelAndView listCustomers(@RequestParam("s") Optional<String > s, Pageable pageable){
+        Page<Customer> customers;
+        if(s.isPresent()){
+            customers = customerService.findAllByFirstNameContaining(s.get(), pageable);
+        } else {
+            customers = customerService.findAll(pageable);
+        }
         ModelAndView modelAndView = new ModelAndView("/customer/list");
         modelAndView.addObject("customers", customers);
         return modelAndView;

@@ -10,6 +10,8 @@ import java.util.List;
 public interface CustomerService {
     Iterable<Customer> findAll();
 
+
+
     Page<Customer> findAll(Pageable pageable);
 
     Customer findById(Long id);
@@ -20,5 +22,6 @@ public interface CustomerService {
 
     Iterable<Customer> findAllByProvince(Province province);
 
+    Page<Customer> findAllByFirstNameContaining(String firstname, Pageable pageable);
 
 }
